@@ -1,15 +1,14 @@
-# Open input text file
+#open input text file
 file = open('declaration.txt', 'r')
-readFile = file.read()
+text = file.read()
 
-# Open output text file
+#open output text file
 fileOut = open('outputCount.txt', 'w')
 
-
-# Method to tokenize words in the text file
+#methods for tokenizing text file
 def tokenize():
-    if book is not None:
-        words = book.lower().split()
+    if text is not None:
+        words = text.lower().split()
         return words
     else:
         return None
@@ -24,7 +23,7 @@ def map_text(tokens):
             word = element.replace(",","")
             word = word.replace(".","")
 
-            # Does the word appear in list?
+            # Word Exist?
             if word in hash_map:
                 hash_map[word] = hash_map[word] + 1
             else:
@@ -47,7 +46,9 @@ map = map_text(words)
 # Show Word Information
 for word in sorted(map):
     fileOut.write(word+ " " + str(map[word]) + "\n")
-
-# Close files
-file.close()
+    
+    
 fileOut.close()
+
+
+#    print('Word: [' + word + '] Frequency: ' + str(map[word]))
