@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #open input text file
 file = open('declaration.txt', 'r')
 text = file.read()
