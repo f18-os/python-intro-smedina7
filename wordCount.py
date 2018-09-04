@@ -1,11 +1,18 @@
 #!/usr/bin/python
 
+import re
+import sys
+
+#set input and output files
+inputName = sys.argv[1]
+outputName = sys.argv[2]
+
 #open input text file
-file = open('declaration.txt', 'r')
+file = open(inputName, 'r')
 text = file.read()
 
 #open output text file
-fileOut = open('outputCount.txt', 'w')
+fileOut = open(outputName, 'w')
 
 #methods for tokenizing text file
 def tokenize():
@@ -24,6 +31,11 @@ def map_text(tokens):
             # Remove Punctuation
             word = element.replace(",","")
             word = word.replace(".","")
+            word = word.replace(",","")
+            word = word.replace(";","")
+            word = word.replace(":","")
+            word = word.replace("-", " ")
+            
 
             # Word Exist?
             if word in hash_map:
