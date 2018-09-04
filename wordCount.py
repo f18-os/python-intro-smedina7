@@ -12,10 +12,6 @@ outputName = sys.argv[2]
 file = open(inputName, 'r')
 text = file.read()
 
-
-#open output text file
-fileOut = open(outputName, 'w')
-
 #methods for tokenizing text file
 def tokenize():
     if text is not None:
@@ -51,7 +47,7 @@ def map_text(tokens):
         return None
 
 #Open output file
-fileOut = open('outputCount.txt', 'w')
+fileOut = open(outputName, 'w')
 
 # Tokenize
 words = tokenize()
@@ -65,4 +61,3 @@ for word in sorted(map):
     
     
 fileOut.close()
-file.close()
