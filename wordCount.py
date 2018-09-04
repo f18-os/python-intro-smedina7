@@ -65,3 +65,4 @@ for word in sorted(map):
     
     
 fileOut.close()
+file.close()
