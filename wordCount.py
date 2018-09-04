@@ -2,6 +2,7 @@
 
 import re
 import sys
+import string
 
 #set input and output files
 inputName = sys.argv[1]
@@ -11,6 +12,7 @@ outputName = sys.argv[2]
 file = open(inputName, 'r')
 text = file.read()
 
+
 #open output text file
 fileOut = open(outputName, 'w')
 
@@ -18,6 +20,9 @@ fileOut = open(outputName, 'w')
 def tokenize():
     if text is not None:
         words = text.lower().split()
+#       text = text.strip()
+#       word = re.split('[ \t]', text)
+#       words = nltk.word_tokenize(text)
         return words
     else:
         return None
@@ -28,10 +33,8 @@ def map_text(tokens):
 
     if tokens is not None:
         for element in tokens:
-            # Remove Punctuation
             word = element.replace(",","")
             word = word.replace(".","")
-            word = word.replace(",","")
             word = word.replace(";","")
             word = word.replace(":","")
             word = word.replace("-", " ")
@@ -50,9 +53,8 @@ def map_text(tokens):
 #Open output file
 fileOut = open('outputCount.txt', 'w')
 
-# Tokenize the Book
+# Tokenize
 words = tokenize()
-#word_list = ['HE','Multitude']
 
 # Create a Hash Map (Dictionary)
 map = map_text(words)
@@ -63,6 +65,3 @@ for word in sorted(map):
     
     
 fileOut.close()
-
-
-#    print('Word: [' + word + '] Frequency: ' + str(map[word]))
