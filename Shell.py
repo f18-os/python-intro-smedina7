@@ -26,8 +26,6 @@ while(userCommand != "exit"):
         os.write(2, ("fork failed, returning %d\n" % rc).encode())
         sys.exit(1)
     elif rc == 0:                   # child
-        os.write(1, ("Child: My pid==%d.  Parent's pid=%d\n" %
-                     (os.getpid(), pid)).encode())
         if '>' in userCommand:
             inputR = args.index('>')  #store index of '>'
             file = args[3]
@@ -37,14 +35,17 @@ while(userCommand != "exit"):
             fd = sys.stdout.fileno() # os.open("p4-output.txt", os.O_CREAT)
             os.set_inheritable(fd, True)
             os.write(2, ("Child: opened fd=%d for writing\n" % fd).encode())
- #           sys.exit(1)
+            
         elif '<' in userCommand:
             outputR = args.index('<')   #store index of '<'
             args =  args[:outputR] + args[outputR+1:]
- #           sys.exit(1)
-        
- #       elif userCommand != "exit":
             
+        elif 'echo' in userCommand:
+            echoCommand = userCommand.replace(userCommand[:5], '')
+            args = ["echo", echoCommand]
+            
+        elif userCommand != "exit":
+            os.write(2, ("Command not found, try another command!\n").encode())
             #sys.exit(1)
              
     
@@ -55,16 +56,9 @@ while(userCommand != "exit"):
             except FileNotFoundError:             # ...expected
                 pass                              # ...fail quietly
 
-        os.write(2, ("Child:    Error: Could not exec %s\n" % args[0]).encode())
-        os.write(1, ("Command not found, try another command!").encode())
-        
- #       sys.exit(1)                 # terminate with error
 
     else:                           # parent (forked ok)
-        os.write(1, ("Parent: My pid=%d.  Child's pid=%d\n" %
-                 (pid, rc)).encode())
         childPidCode = os.wait()
-        os.write(1, ("Parent: Child %d terminated with exit code %d\n" %
-                 childPidCode).encode())
+
 sys.exit(1)
 print("Closing shell. Good-Bye.")
