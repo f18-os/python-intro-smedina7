@@ -16,6 +16,16 @@ while(userCommand != "exit"):
     userCommand = input("steph-shell$ ")
     args = userCommand.split()
     
+    if 'cd' in userCommand:
+        inputR = args.index('cd')
+        newDir = args[inputR+1:]
+        try:
+            os.chdir(os.path.expanduser(newDir[0]))
+            
+        except FileNotFoundError:
+            os.write(2, ("Try another command!\n").encode())
+            pass
+    
 
     pid = os.getpid()               # get and remember pid
     rc = os.fork()
@@ -26,7 +36,7 @@ while(userCommand != "exit"):
         sys.exit(1)
     elif rc == 0:                   # child
         if '>' in userCommand:
-            length = len(args)-1
+            length =len(args)-1
             inputR = args.index('>')  #store index of '>'
             file = args[length]
             args = args[:inputR]
@@ -37,12 +47,10 @@ while(userCommand != "exit"):
             os.write(2, ("Child: opened fd=%d for writing\n" % fd).encode())
             
         elif '<' in userCommand:
-            #discussed concatination with Alex Melendez
             outputR = args.index('<')   #store index of '<'
             args =  args[:outputR] + args[outputR+1:]
             
         elif 'echo' in userCommand:
-            #discussed echo with Elizardo Baeza
             echoCommand = userCommand.replace(userCommand[:5], '')
             args = ["echo", echoCommand]
 
@@ -50,30 +58,21 @@ while(userCommand != "exit"):
             userInput = userCommand.split(" ")
             args = [userInput[0]]
             
-            
-        elif userCommand != "exit":
+        elif 'cd' in userCommand:
+            inputR = args.index('cd')
+            newDir = args[inputR+1:]
+
+                
+        else:
             os.write(2, ("Command not found, try another command!\n").encode())
-            #sys.exit(1)
-        
-        elif '|' in userCommand:
-            inputR = args.index('|')
-            length = len(args)-1
-            firstCommand = args[:inputR]  #left side of pipe
-            secondCommand = args[inputR+1:]  #right side of pipe
-            args = [firstCommand, secondCommand]  #store the two commands into list
-            
-            file = args[length]
-            os.close(1)                  #redirect child's stdout
-            sys.stdin = open(args[0], "r")
-            fd = sys.stdin.fileno() # os.open("p4-output.txt", os.O_CREAT)
-            os.set_inheritable(fd, True)
-            os.write(2, ("Child: opened fd=%d for writing\n" % fd).encode())
+             
     
         for dir in re.split(":", os.environ['PATH']): # try each directory in path
-            program = "%s/%s" % (dir, args[1])
+            program = "%s/%s" % (dir, args[0])
             try:
                 os.execve(program, args, os.environ) # try to exec program
             except FileNotFoundError:             # ...expected
+                   
                 pass                              # ...fail quietly
 
 
