@@ -11,10 +11,30 @@ userCommand = ""
 args = []
 
 while(userCommand != "exit"):
+    try:
+        envCommand = os.environ['ps1']
+    except:
+        osEn = False
+        
+    if osEn is False:
+        envCommand = ("$ ")
 
     #Store user input
-    userCommand = input("steph-shell$ ")
-    args = userCommand.split()
+ #   userCommand = input("steph-shell$ ")
+    userCommand = input(envCommand)
+    print(userCommand)
+    args = userCommand.split(" ")
+    print(args)
+    
+    if 'cd' in userCommand:
+        inputR = args.index('cd')
+        newDir = args[inputR+1:]
+        try:
+            os.chdir(os.path.expanduser(newDir[0]))
+            
+        except FileNotFoundError:
+            os.write(2, ("Try another command!\n").encode())
+            pass
     
 
     pid = os.getpid()               # get and remember pid
@@ -47,13 +67,23 @@ while(userCommand != "exit"):
         elif len(userCommand) == 2:
             userInput = userCommand.split(" ")
             args = [userInput[0]]
+            
+        elif 'cd' in userCommand:
+            inputR = args.index('cd')
+            newDir = args[inputR+1:]
+
+##                
+##        else:
+##            os.write(2, ("Command not found, try another command!\n").encode())
              
     
         for dir in re.split(":", os.environ['PATH']): # try each directory in path
             program = "%s/%s" % (dir, args[0])
+            #print(args[0])
             try:
                 os.execve(program, args, os.environ) # try to exec program
             except FileNotFoundError:             # ...expected
+                #os.write(2, ("Command not found, try another command!\n").encode())
                    
                 pass                              # ...fail quietly
 
