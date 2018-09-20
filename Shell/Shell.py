@@ -36,7 +36,7 @@ try:
         for f in (pr, pw):
             os.set_inheritable(f, True)
         
-        if 'cd' in userCommand:
+        if 'cd' in userCommand: #4
             inputR = args.index('cd')
             newDir = args[inputR+1:]  #1
             try:
@@ -92,7 +92,7 @@ try:
                 
             elif '|' in userCommand:               
                 os.close(1)                 # redirect child's stdout
-                os.dup(pw)
+                os.dup2(pw)
                 for fd in (pr, pw):
                     os.close(fd)
                 
